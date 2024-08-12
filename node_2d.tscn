@@ -1,0 +1,189 @@
+[gd_scene load_steps=18 format=3 uid="uid://bcpcau7tjeh2u"]
+
+[ext_resource type="Script" path="res://scripts/cards_v3.gd" id="1_v71nq"]
+[ext_resource type="Script" path="res://scripts/multiplayersync.gd" id="2_loiud"]
+[ext_resource type="Texture2D" uid="uid://bu4js6cn84a5s" path="res://cards/card_back.png" id="3_u73hd"]
+[ext_resource type="Script" path="res://scripts/Draw.gd" id="4_3cpuy"]
+[ext_resource type="Texture2D" uid="uid://c7tbx4rayx4oy" path="res://cards/card_front.png" id="4_mennq"]
+[ext_resource type="Script" path="res://scripts/card_place.gd" id="6_r2hty"]
+[ext_resource type="Shader" path="res://shaders/red.gdshader" id="7_stcfi"]
+[ext_resource type="Script" path="res://scripts/signal_add.gd" id="8_7vupv"]
+[ext_resource type="Shader" path="res://shaders/green.gdshader" id="8_52b3l"]
+[ext_resource type="Shader" path="res://shaders/yellow.gdshader" id="9_63mtv"]
+[ext_resource type="Shader" path="res://shaders/blue.gdshader" id="10_ujj56"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_43rv4"]
+properties/0/path = NodePath("../CanvasLayer/FlowContainer:cards")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("../CanvasLayer/FlowContainer:turn")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eprat"]
+shader = ExtResource("7_stcfi")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_frnqm"]
+shader = ExtResource("8_52b3l")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3cxmv"]
+shader = ExtResource("9_63mtv")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x3d3k"]
+shader = ExtResource("10_ujj56")
+
+[sub_resource type="LabelSettings" id="LabelSettings_3xfc0"]
+font_size = 50
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_v71nq")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../CanvasLayer/Label")
+spawn_limit = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("../MultiplayerSpawner")
+replication_config = SubResource("SceneReplicationConfig_43rv4")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+editor_description = "Toggles on and off the card stuff before we start."
+visible = false
+
+[node name="placed_card" type="Sprite2D" parent="CanvasLayer"]
+position = Vector2(600, 105)
+texture = ExtResource("4_mennq")
+script = ExtResource("6_r2hty")
+
+[node name="FlowContainer" type="FlowContainer" parent="CanvasLayer"]
+offset_top = 200.0
+offset_right = 1157.0
+offset_bottom = 400.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+theme_override_constants/h_separation = -10
+theme_override_constants/v_separation = -57
+alignment = 1
+script = ExtResource("2_loiud")
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="deck_stack" type="Sprite2D" parent="CanvasLayer"]
+position = Vector2(500, 100)
+texture = ExtResource("3_u73hd")
+
+[node name="deck" type="Sprite2D" parent="CanvasLayer/deck_stack"]
+position = Vector2(0, 5)
+texture = ExtResource("3_u73hd")
+
+[node name="deck2" type="Sprite2D" parent="CanvasLayer/deck_stack"]
+position = Vector2(0, 10)
+texture = ExtResource("3_u73hd")
+
+[node name="Button" type="Button" parent="CanvasLayer/deck_stack"]
+offset_left = -50.0
+offset_top = -100.0
+offset_right = 50.0
+offset_bottom = 110.0
+text = "
+
+
+
+
+Click to 
+Draw"
+flat = true
+script = ExtResource("4_3cpuy")
+
+[node name="CheckBox" type="CheckBox" parent="CanvasLayer"]
+offset_left = 659.0
+offset_top = 11.0
+offset_right = 800.0
+offset_bottom = 42.0
+disabled = true
+text = "Is it your turn?"
+
+[node name="wild_choice" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="red" type="Button" parent="wild_choice"]
+material = SubResource("ShaderMaterial_eprat")
+offset_left = 30.0
+offset_top = 20.0
+offset_right = 130.0
+offset_bottom = 120.0
+script = ExtResource("8_7vupv")
+
+[node name="green" type="Button" parent="wild_choice"]
+material = SubResource("ShaderMaterial_frnqm")
+offset_left = 250.0
+offset_top = 20.0
+offset_right = 350.0
+offset_bottom = 120.0
+script = ExtResource("8_7vupv")
+
+[node name="yellow" type="Button" parent="wild_choice"]
+material = SubResource("ShaderMaterial_3cxmv")
+offset_left = 1000.0
+offset_top = 20.0
+offset_right = 1100.0
+offset_bottom = 120.0
+script = ExtResource("8_7vupv")
+
+[node name="blue" type="Button" parent="wild_choice"]
+material = SubResource("ShaderMaterial_x3d3k")
+offset_left = 750.0
+offset_top = 20.0
+offset_right = 850.0
+offset_bottom = 120.0
+script = ExtResource("8_7vupv")
+
+[node name="StartMenu" type="CanvasLayer" parent="."]
+
+[node name="create_server" type="Button" parent="StartMenu"]
+offset_left = 500.0
+offset_top = 200.0
+offset_right = 630.0
+offset_bottom = 240.0
+text = "Create Server"
+
+[node name="connect_client" type="Button" parent="StartMenu"]
+offset_left = 500.0
+offset_top = 250.0
+offset_right = 630.0
+offset_bottom = 290.0
+text = "Connect Client"
+
+[node name="ip" type="LineEdit" parent="StartMenu"]
+offset_left = 500.0
+offset_top = 300.0
+offset_right = 630.0
+offset_bottom = 340.0
+placeholder_text = "127.0.0.1"
+
+[node name="Label" type="Label" parent="StartMenu"]
+offset_left = 475.0
+offset_top = 90.0
+offset_right = 675.0
+offset_bottom = 160.0
+text = "Goduno"
+label_settings = SubResource("LabelSettings_3xfc0")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="StartMenu"]
+offset_left = 475.0
+offset_top = 350.0
+offset_right = 655.0
+offset_bottom = 380.0
+bbcode_enabled = true
+text = "[center]Created by [color=#ff0000][url=https://youtube.com/@BestSpark]BestSpark[/url][/color][/center]"
+scroll_active = false
+
+[connection signal="pressed" from="CanvasLayer/deck_stack/Button" to="." method="_on_button_pressed"]
+[connection signal="press" from="wild_choice/red" to="." method="wild_press"]
+[connection signal="press" from="wild_choice/green" to="." method="wild_press"]
+[connection signal="press" from="wild_choice/yellow" to="." method="wild_press"]
+[connection signal="press" from="wild_choice/blue" to="." method="wild_press"]
+[connection signal="meta_clicked" from="StartMenu/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
